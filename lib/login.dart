@@ -4,7 +4,6 @@ import 'package:discovermyschool/SignUp.dart';
 import 'package:discovermyschool/adminPanel.dart';
 import 'package:discovermyschool/schoolList.dart';
 import 'package:discovermyschool/schoolScreen.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';

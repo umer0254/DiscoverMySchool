@@ -191,14 +191,17 @@ class __signupFormFields extends State<_signupFormFields> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(35, 10, 35, 10),
-            child: DropdownButton<String>(
+            child: DropdownButtonFormField<String>(
               value: dropdownValue,
               icon: const Icon(Icons.arrow_downward),
               elevation: 16,
-              style: const TextStyle(color: Colors.deepPurple),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
+              style: const TextStyle(color: Colors.black),
+              // underline: Container(
+              //   height: 2,
+              //   color: Colors.deepPurpleAccent,
+              // ),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(6))
               ),
               onChanged: (String? value) {
                 // This is called when the user selects an item.
