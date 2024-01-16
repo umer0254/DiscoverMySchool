@@ -1,3 +1,4 @@
+import 'package:discovermyschool/adminPanel.dart';
 import 'package:discovermyschool/login.dart';
 import 'package:discovermyschool/splashScreen.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
         useMaterial3: true,
       ),
-      home: splashScreen(),
+      home: AdminPanel(),
     );
   }
 }

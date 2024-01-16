@@ -273,7 +273,7 @@ class __signupFormFields extends State<_signupFormFields> {
       String c_password, String phone_number, String user_type) async {
     try {
       Response response = await post(
-        Uri.parse('http://10.0.2.2:8000/api/userregistrattion'),
+        Uri.parse('http://127.0.0.1:8000/api/userregistrattion'),
         body: {
           "email": email,
           "password": password,

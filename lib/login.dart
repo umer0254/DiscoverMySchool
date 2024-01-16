@@ -147,6 +147,7 @@ class _MyFormFieldsState extends State<_MyFormFields> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
+
               ),
               child: const Text("Login",style: TextStyle(color: Colors.black,fontWeight:FontWeight.bold),),
             ),
@@ -177,7 +178,7 @@ loginUser(String email,String password ) async {
   try {
     Response response = await post(
       Uri.parse(
-          'http://10.0.2.2:8000/api/userlogin'),
+          'http://127.0.0.1:8000/api/userlogin'),
       body: {
         "email": email,
         "password": password
