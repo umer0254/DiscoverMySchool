@@ -7,6 +7,7 @@ import 'package:discovermyschool/schoolScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class login extends StatefulWidget {
   const login({super.key});
@@ -175,10 +176,11 @@ class _MyFormFieldsState extends State<_MyFormFields> {
   }
 
 loginUser(String email,String password ) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
   try {
     Response response = await post(
       Uri.parse(
-          'http://127.0.0.1:8000/api/userlogin'),
+          'http://10.0.2.2:8000/api/userlogin'),
       body: {
         "email": email,
         "password": password
@@ -188,6 +190,8 @@ loginUser(String email,String password ) async {
       final body = response.body;
       final json = jsonDecode(body);
       final userType=json['data']['user_type'];
+      final bearertoken=json['data']['token'];
+      prefs.setString('Token', bearertoken);
       if(userType=="Student"){
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SchoolList(),));
       } else if(userType=="School"){

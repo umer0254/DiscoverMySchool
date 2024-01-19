@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:discovermyschool/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -201,8 +203,8 @@ class __signupFormFields extends State<_signupFormFields> {
               //   color: Colors.deepPurpleAccent,
               // ),
               decoration: InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(6))
-              ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6))),
               onChanged: (String? value) {
                 // This is called when the user selects an item.
                 setState(() {
@@ -273,7 +275,7 @@ class __signupFormFields extends State<_signupFormFields> {
       String c_password, String phone_number, String user_type) async {
     try {
       Response response = await post(
-        Uri.parse('http://127.0.0.1:8000/api/userregistrattion'),
+        Uri.parse('http://10.0.2.2:8000/api/userregistrattion'),
         body: {
           "email": email,
           "password": password,
@@ -288,7 +290,9 @@ class __signupFormFields extends State<_signupFormFields> {
       if (response.statusCode == 200) {
         alert(context);
       } else {
-        print("Registration Unsuccessful");
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Registration Failed")));
+
       }
     } catch (e) {
       print(e);
@@ -306,11 +310,12 @@ class __signupFormFields extends State<_signupFormFields> {
                 actions: <Widget>[
                   TextButton(
                       onPressed: () {
-                        Navigator.pushReplacement(
+                        Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
                               builder: (context) => login(),
-                            ));
+                            ),
+                            (route) => false);
                       },
                       child: Text("OK")),
                 ],
