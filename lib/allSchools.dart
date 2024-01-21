@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:discovermyschool/adminPanel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -26,10 +27,10 @@ class _allSchoolsState extends State<allSchools> {
     return  Scaffold(
       appBar: AppBar(
         title: Text("All Schools"),backgroundColor:  Colors.lightBlue,
-      ),
+      ),drawer: drawer(),
       body: (isLoading && SchoolsList.isEmpty)? Center(
       child: CircularProgressIndicator(
-        color: Colors.deepPurple,
+        color: Colors.lightBlue,
       ),
     ):
     Column(
@@ -86,14 +87,14 @@ class _allSchoolsState extends State<allSchools> {
                             // ),
                             Wrap(
                               children: [
-                                Container(width: 110,child: Text("School Name",style: TextStyle(fontWeight: FontWeight.bold))),
+                                Container(width: 120,child: Text("School Name",style: TextStyle(fontWeight: FontWeight.bold))),
                                 Text("${c.schoolName}",),
                               ],
                             ),
 
                             Wrap(
                               children: [
-                                Container(width: 110,child: Text("Email",style: TextStyle(fontWeight: FontWeight.bold))),
+                                Container(width: 120,child: Text("Email",style: TextStyle(fontWeight: FontWeight.bold))),
                                 Text("${c.email}"),
                               ],
                             ),
@@ -101,14 +102,14 @@ class _allSchoolsState extends State<allSchools> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(width: 110,child: Text("School Type",style: TextStyle(fontWeight: FontWeight.bold))),
+                                Container(width: 120,child: Text("School Type",style: TextStyle(fontWeight: FontWeight.bold))),
                                 Expanded(child: Text(c.schoolType??"",maxLines: null,)),
                               ],
                             ),
 
                             Wrap(
                               children: [
-                                Container(width: 110,child: Text("Admission Fee",style: TextStyle(fontWeight: FontWeight.bold))),
+                                Container(width: 120,child: Text("Admission Fee",style: TextStyle(fontWeight: FontWeight.bold))),
                                 Text("${c.admissionFee}"),
                               ],
                             ),
@@ -116,13 +117,13 @@ class _allSchoolsState extends State<allSchools> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(width:110 ,child: Text("Admission Status ",style: TextStyle(fontWeight: FontWeight.bold))),
+                                  Container(width:120 ,child: Text("Admission Status ",style: TextStyle(fontWeight: FontWeight.bold))),
                                   Expanded(child: Text(c.admissionStatus??"" ,maxLines: null,)),
                                 ],
                               ),
                               Wrap(
                                 children: [
-                                  Container(width: 110,child: Text("Registration Date",style: TextStyle(fontWeight: FontWeight.bold))),
+                                  Container(width: 120,child: Text("Registration Date",style: TextStyle(fontWeight: FontWeight.bold))),
                                   Text("${c.createdAt??""}"),
                                 ],
                               ),
