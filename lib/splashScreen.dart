@@ -45,7 +45,7 @@ class _splashScreenState extends State<splashScreen> {
     final token=prefs.getString('Token');
     print(token);
     String url;
-    url='http://10.0.2.2:8000/api/user';
+    url='http://127.0.0.1:8000/api/user';
       final response = await http.get(Uri.parse(url),headers: {
         'Authorization': 'Bearer $token',
       });
@@ -54,7 +54,7 @@ class _splashScreenState extends State<splashScreen> {
         final json = jsonDecode(body);
         final userType=json['user_type'];
         if(userType=="Student"){
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SchoolList(),));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProfileList(),));
         } else if(userType=="School"){
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SchoolScreen(),));
         }else{
@@ -73,3 +73,4 @@ class _splashScreenState extends State<splashScreen> {
     }
   }
 }
+

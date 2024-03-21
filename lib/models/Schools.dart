@@ -8,7 +8,9 @@ class School {
   double admissionFee;
   String admissionStatus;
   double tuitionFee;
-  String schoolType;
+  String board;
+  String area;
+  String city;
   int adminId;
   int userId;
   DateTime createdAt;
@@ -24,7 +26,9 @@ class School {
     required this.admissionFee,
     required this.admissionStatus,
     required this.tuitionFee,
-    required this.schoolType,
+    required this.board,
+    required this.city,
+    required this.area,
     required this.adminId,
     required this.userId,
     required this.createdAt,
@@ -38,12 +42,14 @@ class School {
       schoolName: json['school_name']??"",
       email: json['email']??"",
       address: json['address']??"",
+      city: json['city']??"",
+      area: json['area']??"",
       contactNumber: json['contact_number']??"",
       isApproved: json['is_approved']??0,
       admissionFee: double.parse(json['admission_fee']??""),
       admissionStatus: json['admission_status']??"",
       tuitionFee: double.parse(json['tuition_fee']??""),
-      schoolType: json['school_type']??"",
+      board: json['board']??"",
       adminId: json['admin_id']??0,
       userId: json['user_id']??0,
       createdAt: DateTime.parse(json['created_at']??""),

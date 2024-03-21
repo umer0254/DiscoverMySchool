@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:discovermyschool/adminPanel.dart';
+import 'package:discovermyschool/searchFilter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'models/Schools.dart';
 
 class allSchools extends StatefulWidget {
@@ -16,6 +18,7 @@ class allSchools extends StatefulWidget {
 class _allSchoolsState extends State<allSchools> {
   bool isLoading=false;
   List<School> SchoolsList=[];
+  var result="";
   @override
   void initState() {
     // TODO: implement initState
@@ -35,8 +38,50 @@ class _allSchoolsState extends State<allSchools> {
     ):
     Column(
       children: [
+        SizedBox(height: 15,),
         Stack(
           children: <Widget>[
+            // SizedBox(height: 30,),
+            // SearchBar(),
+            SearchBar(
+              // controller: controller,
+              padding: const MaterialStatePropertyAll<EdgeInsets>(
+                  EdgeInsets.symmetric(horizontal: 16.0)),
+              onTap: () {
+                // controller.openView();
+              },
+              onChanged: (_) {
+                // controller.openView();
+              },
+              // leading: const Icon(Icons.search),
+              trailing: <Widget>[
+                Tooltip(
+                  message: 'Change brightness mode',
+                  child: IconButton(
+                    // isSelected: isDark,
+                    onPressed: () {
+                      setState(() {
+                        // isDark = !isDark;
+                      });
+                    },
+                    icon: Icon(Icons.search),
+
+                    // selectedIcon: const Icon(Icons.brightness_2_outlined),
+                  ),
+                ),
+                IconButton(
+                  // isSelected: isDark,
+                  onPressed: () async {
+                   result= await Navigator.push(context, MaterialPageRoute(builder: (context) => Searchfilter(),));
+                    setState(() {
+                      // isDark = !isDark;
+                    });
+                  },
+                  icon: Icon(Icons.filter_list_alt)
+                )
+
+              ],
+            )
             // Container(
             //   width: MediaQuery.sizeOf(context).width,
             //   height: 200.0,
@@ -61,7 +106,7 @@ class _allSchoolsState extends State<allSchools> {
         //   )
         // ),
         Expanded(
-          child: ListView.builder(
+          child: ListView.builder( //CardView for all schools//
               itemCount: SchoolsList.length + 1,
               itemBuilder: (context, index) {
                 if (index < SchoolsList.length) {
@@ -77,6 +122,7 @@ class _allSchoolsState extends State<allSchools> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+
                             // Table(
                             //   border: TableBorder.all(),
                             //   children: [
@@ -103,7 +149,7 @@ class _allSchoolsState extends State<allSchools> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(width: 120,child: Text("School Type",style: TextStyle(fontWeight: FontWeight.bold))),
-                                Expanded(child: Text(c.schoolType??"",maxLines: null,)),
+                                Expanded(child: Text(c.board??"",maxLines: null,)),
                               ],
                             ),
 
@@ -150,12 +196,19 @@ class _allSchoolsState extends State<allSchools> {
   }
   apidata() async {
     String url;
- url='http://10.0.2.2:8000/api/getAllSchools';
+ // url='http://127.0.0.1:8000/api/getAllSchools';
     try {
       setState(() {
         isLoading=true;
       });
-      final response = await http.get(Uri.parse(url));
+      Response response = await post(
+        Uri.parse(
+            'http://127.0.0.1:8000/api/getAllSchools'),
+        body: {
+          // "email": email,
+          // "password": password
+        },
+      );
       if (response.statusCode == 200) {
 
         var data = json.decode(response.body);
@@ -176,10 +229,70 @@ class _allSchoolsState extends State<allSchools> {
         });
 
 
-
       }
     } catch (e) {
       print(e);
     }
   }
+
 }
+// class SearchBarApp extends StatefulWidget {
+//   const SearchBarApp({super.key});
+//
+//   @override
+//   State<SearchBarApp> createState() => _SearchBarAppState();
+// }
+//
+// class _SearchBarAppState extends State<SearchBarApp> {
+//   bool isDark = false;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final ThemeData themeData = ThemeData(
+//         useMaterial3: true,
+//         brightness: isDark ? Brightness.dark : Brightness.light);
+//
+//     return MaterialApp(
+//       theme: themeData,
+//       home: Scaffold(
+//         // appBar: AppBar(title: const Text('Search Bar Sample')),
+//         body: Padding(
+//           padding: const EdgeInsets.all(1.0),
+//           child: SearchAnchor(
+//               builder: (BuildContext context, SearchController controller) {
+//                 return SearchBar(
+//                   controller: controller,
+//                   padding: const MaterialStatePropertyAll<EdgeInsets>(
+//                       EdgeInsets.symmetric(horizontal: 20.0)),
+//                   onTap: () {
+//                     controller.openView();
+//                   },
+//                   onChanged: (_) {
+//                     controller.openView();
+//                   },
+//                   leading: const Icon(Icons.search),
+//                   trailing: <Widget>[
+//                  IconButton(onPressed: () {
+//
+//                  }, icon:Icon(Icons.search))
+//                   ],
+//                 );
+//               }, suggestionsBuilder:
+//               (BuildContext context, SearchController controller) {
+//             return List<ListTile>.generate(5, (int index) {
+//               final String item = 'item $index';
+//               return ListTile(
+//                 title: Text(item),
+//                 onTap: () {
+//                   setState(() {
+//                     controller.closeView(item);
+//                   });
+//                 },
+//               );
+//             });
+//           }),
+//         ),
+//       ),
+//     );
+//   }
+// }

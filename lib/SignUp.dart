@@ -48,6 +48,28 @@ class _signupFormFields extends StatefulWidget {
   State<_signupFormFields> createState() => __signupFormFields();
 }
 
+//
+
+//       ),
+//         color: Colors.blue,
+//         height: 2,
+//       underline: Container(
+//       style: const TextStyle(color: Colors.blue),
+//       elevation: 16,
+//       icon: const Icon(Icons.arrow_downward),
+//       value: dropdownValue,
+//     return DropdownButton<String>(
+//   Widget build(BuildContext context) {
+//   @override
+//
+//
+// class _DropdownButtonExampleState extends State<DropdownButtonExample> {
+//
+// }
+//   State<DropdownButtonExample> createState() => _DropdownButtonExampleState();
+//   @override
+//
+//   const DropdownButtonExample({super.key});
 class __signupFormFields extends State<_signupFormFields> {
   final _formKey = GlobalKey<FormState>();
   var selectedValue = "";
@@ -325,29 +347,7 @@ class __signupFormFields extends State<_signupFormFields> {
         });
   }
 }
-
-//
 // class DropdownButtonExample extends StatefulWidget {
-//   const DropdownButtonExample({super.key});
-//
-//   @override
-//   State<DropdownButtonExample> createState() => _DropdownButtonExampleState();
-// }
-//
-// class _DropdownButtonExampleState extends State<DropdownButtonExample> {
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return DropdownButton<String>(
-//       value: dropdownValue,
-//       icon: const Icon(Icons.arrow_downward),
-//       elevation: 16,
-//       style: const TextStyle(color: Colors.blue),
-//       underline: Container(
-//         height: 2,
-//         color: Colors.blue,
-//       ),
 //       onChanged: (String? value) {
 //         // This is called when the user selects an item.
 //         setState(() {
