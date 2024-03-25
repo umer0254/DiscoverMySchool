@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:discovermyschool/login.dart';
-import 'package:discovermyschool/schoolList.dart';
+import 'package:discovermyschool/ProfileList.dart';
 import 'package:discovermyschool/schoolScreen.dart';
+import 'package:discovermyschool/schoolSearchListing.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -45,7 +46,7 @@ class _splashScreenState extends State<splashScreen> {
     final token=prefs.getString('Token');
     print(token);
     String url;
-    url='http://127.0.0.1:8000/api/user';
+    url='http://10.0.2.2/api/user';
       final response = await http.get(Uri.parse(url),headers: {
         'Authorization': 'Bearer $token',
       });
@@ -53,16 +54,16 @@ class _splashScreenState extends State<splashScreen> {
         final body = response.body;
         final json = jsonDecode(body);
         final userType=json['user_type'];
-        if(userType=="Student"){
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProfileList(),));
+        if(userType=="Parent"){
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => schoolSearchList(),));
         } else if(userType=="School"){
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SchoolScreen(),));
-        }else{
+        }else if(userType=="Admin"){
           Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => AdminPanel(),));
         }
       }else{
 
-          Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) {return login();},));
+        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => login(),));
 
 
       }

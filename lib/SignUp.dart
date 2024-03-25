@@ -81,7 +81,7 @@ class __signupFormFields extends State<_signupFormFields> {
   var c_password = TextEditingController();
 
   // var user_type=TextEditingController();
-  static const List<String> list = <String>['Student', 'School'];
+  static const List<String> list = <String>['Parent', 'School'];
   String dropdownValue = list.first;
 
   @override

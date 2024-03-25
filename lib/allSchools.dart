@@ -196,14 +196,14 @@ class _allSchoolsState extends State<allSchools> {
   }
   apidata() async {
     String url;
- // url='http://127.0.0.1:8000/api/getAllSchools';
+
     try {
       setState(() {
         isLoading=true;
       });
       Response response = await post(
         Uri.parse(
-            'http://127.0.0.1:8000/api/getAllSchools'),
+            'http://10.0.2.2:8000/api/getAllSchools'),
         body: {
           // "email": email,
           // "password": password

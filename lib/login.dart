@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:discovermyschool/SignUp.dart';
 import 'package:discovermyschool/adminPanel.dart';
-import 'package:discovermyschool/schoolList.dart';
+import 'package:discovermyschool/ProfileList.dart';
 import 'package:discovermyschool/schoolScreen.dart';
+import 'package:discovermyschool/schoolSearchListing.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -180,7 +181,7 @@ loginUser(String email,String password ) async {
   try {
     Response response = await post(
       Uri.parse(
-          'http://127.0.0.1:8000/api/userlogin'),
+          'http://10.0.2.2:8000/api/userlogin'),
       body: {
         "email": email,
         "password": password
@@ -192,11 +193,11 @@ loginUser(String email,String password ) async {
       final userType=json['data']['user_type'];
       final bearertoken=json['data']['token'];
       prefs.setString('Token', bearertoken);
-      if(userType=="Student"){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ProfileList(),));
+      if(userType=="Parent"){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => schoolSearchList(),));
       } else if(userType=="School"){
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SchoolScreen(),));
-      }else{
+      }else if(userType=="Admin"){
        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => AdminPanel(),));
       }
     }else{

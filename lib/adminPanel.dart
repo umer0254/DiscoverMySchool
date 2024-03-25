@@ -290,7 +290,7 @@ class _AdminPanelState extends State<AdminPanel> {
 
   apidata() async {
     String url;
-    url = 'http://127.0.0.1:8000/api/getUnapprovedSchools';
+    url = 'http://10.0.2.2:8000/api/getUnapprovedSchools';
     try {
       setState(() {
         isLoading = true;
@@ -321,7 +321,7 @@ class _AdminPanelState extends State<AdminPanel> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final token=prefs.get('Token');
     String url;
-    url = 'http://127.0.0.1:8000/api/approveSchool/${id}';
+    url = 'http://10.0.2.2:8000/api/approveSchool/${id}';
     try {
 
       final response = await http.put(Uri.parse(url),headers: {
@@ -415,7 +415,7 @@ Future<void> alert(BuildContext context) {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final token=prefs.get('Token');
     String url;
-    url = 'http://127.0.0.1:8000/api/logout';
+    url = 'http://10.0.2.2:8000/api/logout';
     try {
 
       final response = await http.post(Uri.parse(url),headers: {
