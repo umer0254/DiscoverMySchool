@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:discovermyschool/models/Students.dart';
 import 'package:discovermyschool/schoolSearchListing.dart';
 import 'package:discovermyschool/studentProfile.dart';
+import 'package:discovermyschool/studentSubmission.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -33,7 +34,7 @@ class _ProfileListState extends State<ProfileList> {
           title: Text("My Profiles"),
           backgroundColor: Colors.lightBlue,
           actions: [IconButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => StudentProfile(),)), icon: Icon(Icons.add,color: Colors.black),)],
-        ),drawer:drawer1(),
+        ),drawer:Drawer1(),
         body: Scaffold(
             body: (isLoading && StudentList.isEmpty)
                 ? Center(
@@ -58,6 +59,7 @@ class _ProfileListState extends State<ProfileList> {
                                     child: Container(
                                         margin: EdgeInsets.all(10),
                                         child: InkWell(
+                                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => Studentsubmission(id: c.id),)),
                                             child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,

@@ -20,12 +20,11 @@ class _SchoolDetailsState extends State<SchoolDetails> {
   List<School> SchoolsList = [];
   bool isLoading = false;
   final Uri _url = Uri.parse('https://flutter.dev');
-  int selected=1;
+  int selected = 1;
   List<Student> students = [];
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     apidata();
     loadProfiles();
@@ -33,128 +32,174 @@ class _SchoolDetailsState extends State<SchoolDetails> {
 
   @override
   Widget build(BuildContext context) {
-    // You can access the id using widget.id
     return Scaffold(
-        appBar: AppBar(
-          title: Text(""), backgroundColor: Colors.lightBlue,
+      appBar: AppBar(
+        title: Text("School Details"),
+        backgroundColor: Colors.lightBlue,
+      ),
+      body: (isLoading && SchoolsList.isEmpty)
+          ? Center(
+        child: CircularProgressIndicator(
+          color: Colors.lightBlue,
         ),
-        body: (isLoading && SchoolsList.isEmpty) ? Center(
-          child: CircularProgressIndicator(
-            color: Colors.lightBlue,
-          ),
-        ) : SingleChildScrollView(
+      )
+          : SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(SchoolsList[0].schoolImage, width: MediaQuery
-                  .sizeOf(context)
-                  .width, height: MediaQuery
-                  .sizeOf(context)
-                  .height / 3),
-              Text("Mission Statement",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
-              Text(SchoolsList[0].missionStatement),
-              Text("Facilities",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
-              Text(SchoolsList[0].facilities),
-              Text("Extra Curricular Activities",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
-              Text(SchoolsList[0].extracurricularActivities),
-              Text("Principal",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
-              Text(SchoolsList[0].principalName),
-              // Text("Principal Education",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26)),
-              Text("Education",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-              Text(SchoolsList[0].principalQualifications),
-              Text("Biography",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-              Text(SchoolsList[0].principalBiography),
-
-
+              if (SchoolsList.isNotEmpty)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: Image.network(
+                    SchoolsList[0].schoolImage,
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 3,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, progress) {
+                      return progress == null
+                          ? child
+                          : Center(
+                        child: CircularProgressIndicator(
+                          value: progress.cumulativeBytesLoaded /
+                              progress.expectedTotalBytes!,
+                          color: Colors.lightBlue,
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) => Center(
+                      child: Icon(Icons.error, color: Colors.red),
+                    ),
+                  ),
+                ),
+              SizedBox(height: 16),
+              Text(
+                "Mission Statement",
+                style:
+                TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              ),
+              SizedBox(height: 8),
+              Text(
+                SchoolsList.isNotEmpty
+                    ? SchoolsList[0].missionStatement
+                    : '',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 16),
+              Text(
+                "Facilities",
+                style:
+                TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              ),
+              SizedBox(height: 8),
+              Text(
+                SchoolsList.isNotEmpty ? SchoolsList[0].facilities : '',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 16),
+              Text(
+                "Extra Curricular Activities",
+                style:
+                TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              ),
+              SizedBox(height: 8),
+              Text(
+                SchoolsList.isNotEmpty
+                    ? SchoolsList[0].extracurricularActivities
+                    : '',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 16),
+              Text(
+                "Principal",
+                style:
+                TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+              ),
+              SizedBox(height: 8),
+              Text(
+                SchoolsList.isNotEmpty ? SchoolsList[0].principalName : '',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 16),
+              Text(
+                "Education",
+                style:
+                TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              SizedBox(height: 8),
+              Text(
+                SchoolsList.isNotEmpty
+                    ? SchoolsList[0].principalQualifications
+                    : '',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 16),
+              Text(
+                "Biography",
+                style:
+                TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              SizedBox(height: 8),
+              Text(
+                SchoolsList.isNotEmpty
+                    ? SchoolsList[0].principalBiography
+                    : '',
+                style: TextStyle(fontSize: 16),
+              ),
+              SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: MediaQuery
-                        .sizeOf(context)
-                        .width / 1.2,
+                    width: MediaQuery.of(context).size.width / 1.2,
                     child: ElevatedButton(
                       onPressed: () {
                         _dialogBuilder(context);
                       },
-                      child: Text("Apply Now", style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.black)),
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero)
-
+                      child: Text(
+                        "Apply Now",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
-
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.lightBlue,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
                     ),
                   )
                 ],
               ),
+              SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: MediaQuery
-                        .sizeOf(context)
-                        .width / 1.2,
+                    width: MediaQuery.of(context).size.width / 1.2,
                     child: ElevatedButton(
-                      onPressed: () {
-                        _launchUrl();
-
-                      },
-                      child: Text("Visit Website", style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.black)),
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero)
-
+                      onPressed: _launchUrl,
+                      child: Text(
+                        "Visit Website",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
-
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.lightBlue,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
                     ),
                   ),
                 ],
-              )
-
-
+              ),
             ],
           ),
-        )
+        ),
+      ),
     );
-  }
-  apply() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final token = prefs.get('Token');
-    print(widget.id);
-    try {
-      Response response = await post(
-          Uri.parse('http://10.0.2.2:8000/api/apply'),
-          headers: {
-            'Authorization': 'Bearer $token',
-          }, body: {
-        "school_id": widget.id.toString(),
-        "student_id": selected.toString()
-      }
-
-
-      );
-      if (response.statusCode == 201) {
-        print("frrrrrrrrrrrrrr");
-        var data = json.decode(response.body);
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(data['message'])));
-
-
-      }
-    }catch(e){
-      print(e);
-    }
   }
 
   apidata() async {
@@ -167,29 +212,51 @@ class _SchoolDetailsState extends State<SchoolDetails> {
         isLoading = true;
       });
 
-
-      // Make the API request with the constructed body
       Response response = await get(
-          Uri.parse('http://10.0.2.2:8000/api/getSchoolDetails/${widget.id}'),
-          headers: {
-            'Authorization': 'Bearer $token',
-          }
-
+        Uri.parse('http://10.0.2.2:8000/api/getSchoolDetails/${widget.id}'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
       );
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
         print(data['message']);
-        var schoolData = School.fromJson(
-            data['schools']); // Parse the object directly
-        SchoolsList.add(schoolData); // Add the parsed school data to the list
+        var schoolData = School.fromJson(data['schools']);
+        SchoolsList.add(schoolData);
         print("success");
       }
-
 
       setState(() {
         isLoading = false;
       });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  apply() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.get('Token');
+    print(widget.id);
+    try {
+      Response response = await post(
+        Uri.parse('http://10.0.2.2:8000/api/apply'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+        body: {
+          "school_id": widget.id.toString(),
+          "student_id": selected.toString(),
+        },
+      );
+      if (response.statusCode == 201) {
+        print("frrrrrrrrrrrrrr");
+        var data = json.decode(response.body);
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(data['message'])));
+      }
     } catch (e) {
       print(e);
     }
@@ -203,43 +270,49 @@ class _SchoolDetailsState extends State<SchoolDetails> {
 
   Future<void> _dialogBuilder(BuildContext context) {
     return showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-            builder: (context, setStateSB) {
-              return AlertDialog(
-                scrollable: true,
-                title: const Text('Select Any One Profile'),
-                content: Column(children: [
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setStateSB) {
+            return AlertDialog(
+              scrollable: true,
+              title: const Text('Select Any One Profile'),
+              content: Column(
+                children: [
                   for (Student student in students)
                     RadioListTile(
-                        value: student.id,
-                        groupValue: selected,
-                        onChanged: (value) {
-                          setStateSB(() {
-                            selected = value!;
-                          });
-                        },
-                        title: Text(student.studentName)) ,
-
-                ]),
-                actions: <Widget>[
-                  TextButton(
-                      onPressed: () {
-                        apply();
+                      value: student.id,
+                      groupValue: selected,
+                      onChanged: (value) {
+                        setStateSB(() {
+                          selected = value!;
+                        });
                       },
-                      child: Text("Confirm")),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text("Cancel"))
+                      title: Text(student.studentName),
+                    ),
                 ],
-              );
-            },
-          );
-        });
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    apply();
+                  },
+                  child: Text("Confirm"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("Cancel"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
+
   loadProfiles() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final token = prefs.get('Token');
@@ -248,18 +321,17 @@ class _SchoolDetailsState extends State<SchoolDetails> {
         isLoading = true;
       });
       Response response = await get(
-          Uri.parse('http://10.0.2.2:8000/api/my-students'),
-          headers: {
-            'Authorization': 'Bearer $token',
-          });
+        Uri.parse('http://10.0.2.2:8000/api/my-students'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
         print(data);
         final List<dynamic> items = data['students'];
-        var schoolData = items.map((item) => Student.fromJson(item)).toList();
-        students.addAll(schoolData);
-
-
+        var studentData = items.map((item) => Student.fromJson(item)).toList();
+        students.addAll(studentData);
 
         setState(() {
           isLoading = false;
@@ -273,5 +345,4 @@ class _SchoolDetailsState extends State<SchoolDetails> {
       print(e);
     }
   }
-
 }

@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'models/Schools.dart';
 
 class allSchools extends StatefulWidget {
@@ -29,7 +30,7 @@ class _allSchoolsState extends State<allSchools> {
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
-        title: Text("All Schools"),backgroundColor:  Colors.lightBlue,
+        title: Text("Approved Schools"),backgroundColor:  Colors.lightBlue,
       ),drawer: drawer(),
       body: (isLoading && SchoolsList.isEmpty)? Center(
       child: CircularProgressIndicator(
@@ -43,45 +44,45 @@ class _allSchoolsState extends State<allSchools> {
           children: <Widget>[
             // SizedBox(height: 30,),
             // SearchBar(),
-            SearchBar(
-              // controller: controller,
-              padding: const MaterialStatePropertyAll<EdgeInsets>(
-                  EdgeInsets.symmetric(horizontal: 16.0)),
-              onTap: () {
-                // controller.openView();
-              },
-              onChanged: (_) {
-                // controller.openView();
-              },
-              // leading: const Icon(Icons.search),
-              trailing: <Widget>[
-                Tooltip(
-                  message: 'Change brightness mode',
-                  child: IconButton(
-                    // isSelected: isDark,
-                    onPressed: () {
-                      setState(() {
-                        // isDark = !isDark;
-                      });
-                    },
-                    icon: Icon(Icons.search),
-
-                    // selectedIcon: const Icon(Icons.brightness_2_outlined),
-                  ),
-                ),
-                IconButton(
-                  // isSelected: isDark,
-                  onPressed: () async {
-                   result= await Navigator.push(context, MaterialPageRoute(builder: (context) => Searchfilter(),));
-                    setState(() {
-                      // isDark = !isDark;
-                    });
-                  },
-                  icon: Icon(Icons.filter_list_alt)
-                )
-
-              ],
-            )
+            // SearchBar(
+            //   // controller: controller,
+            //   padding: const MaterialStatePropertyAll<EdgeInsets>(
+            //       EdgeInsets.symmetric(horizontal: 16.0)),
+            //   onTap: () {
+            //     // controller.openView();
+            //   },
+            //   onChanged: (_) {
+            //     // controller.openView();
+            //   },
+            //   // leading: const Icon(Icons.search),
+            //   trailing: <Widget>[
+            //     Tooltip(
+            //       message: 'Change brightness mode',
+            //       child: IconButton(
+            //         // isSelected: isDark,
+            //         onPressed: () {
+            //           setState(() {
+            //             // isDark = !isDark;
+            //           });
+            //         },
+            //         icon: Icon(Icons.search),
+            //
+            //         // selectedIcon: const Icon(Icons.brightness_2_outlined),
+            //       ),
+            //     ),
+            //     IconButton(
+            //       // isSelected: isDark,
+            //       onPressed: () async {
+            //        result= await Navigator.push(context, MaterialPageRoute(builder: (context) => Searchfilter(),));
+            //         setState(() {
+            //           // isDark = !isDark;
+            //         });
+            //       },
+            //       icon: Icon(Icons.filter_list_alt)
+            //     )
+            //
+            //   ],
+            // )
             // Container(
             //   width: MediaQuery.sizeOf(context).width,
             //   height: 200.0,
@@ -173,6 +174,24 @@ class _allSchoolsState extends State<allSchools> {
                                   Text("${c.createdAt??""}"),
                                 ],
                               ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                // Container(width: 120,child: Text("Registration Date",style: TextStyle(fontWeight: FontWeight.bold))),
+                                // IconButton(
+                                //     onPressed: () {
+                                //       // approval(c.id);
+                                //     },
+                                //     icon: Icon(Icons.check,color: Colors.green,semanticLabel: "Approve"),
+                                //     iconSize: 30),
+                                IconButton(
+                                    onPressed: () {
+                                      rejectapproval(c.id);
+                                    },
+                                    icon: Icon(Icons.close,color: Colors.red),
+                                    iconSize: 30),
+                              ],
+                            ),
 
 
 
@@ -193,6 +212,30 @@ class _allSchoolsState extends State<allSchools> {
       ],
     ),
     );
+  }
+  rejectapproval(int id) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token=prefs.get('Token');
+    String url;
+    url = 'http://10.0.2.2:8000/api/unapproveSchool/${id}';
+    try {
+
+      final response = await http.put(Uri.parse(url),headers: {
+        'Authorization': 'Bearer $token',
+      });
+      if (response.statusCode == 200) {
+        setState(() {
+          SchoolsList.clear();
+          apidata();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Unapproved successfully")));
+        });
+        // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => AdminPanel(),), (route) => false);
+
+      }
+    }catch(e){
+      print(e);
+    }
+
   }
   apidata() async {
     String url;

@@ -1,235 +1,164 @@
 import 'dart:convert';
-
 import 'package:discovermyschool/ProfileList.dart';
 import 'package:discovermyschool/adminPanel.dart';
+import 'package:discovermyschool/login.dart';
 import 'package:discovermyschool/schoolDetails.dart';
 import 'package:discovermyschool/searchFilter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'models/Schools.dart';
 
-class schoolSearchList extends StatefulWidget {
-  const schoolSearchList({super.key});
+class SchoolSearchList extends StatefulWidget {
+  const SchoolSearchList({super.key});
 
   @override
-  State<schoolSearchList> createState() => _schoolSearchListState();
+  State<SchoolSearchList> createState() => _SchoolSearchListState();
 }
 
-class _schoolSearchListState extends State<schoolSearchList> {
-  bool isLoading=false;
-  List<School> SchoolsList=[];
+class _SchoolSearchListState extends State<SchoolSearchList> {
+  bool isLoading = false;
+  List<School> schoolsList = [];
   dynamic result;
-   var search=TextEditingController();
+  var search = TextEditingController();
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     apidata();
-
   }
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: Text("All Schools"),backgroundColor:  Colors.lightBlue,
-      ),drawer: drawer1(),
-      body: (isLoading && SchoolsList.isEmpty)? Center(
+        title: Text("All Schools"),
+        backgroundColor: Colors.lightBlue,
+      ),
+      drawer: Drawer1(),
+      body: (isLoading && schoolsList.isEmpty)
+          ? Center(
         child: CircularProgressIndicator(
           color: Colors.lightBlue,
         ),
-      ):
-      Column(
+      )
+          : Column(
         children: [
-          SizedBox(height: 15,),
-          Stack(
-            children: <Widget>[
-              // SizedBox(height: 30,),
-              // SearchBar(),
-              SearchBar(
-                controller: search,
-                padding: const MaterialStatePropertyAll<EdgeInsets>(
-                    EdgeInsets.symmetric(horizontal: 16.0)),
-                onTap: () {
-                  // controller.openView();
-                },
-                onChanged: (_) {
-                  // controller.openView();
-                },
-                // leading: const Icon(Icons.search),
-                trailing: <Widget>[
-                  Tooltip(
-                    message: 'Change brightness mode',
-                    child: IconButton(
-                      // isSelected: isDark,
-                      onPressed: () {
-                        setState(() {
-                          apidata();
-                        });
-                      },
-                      icon: Icon(Icons.search),
-
-                      // selectedIcon: const Icon(Icons.brightness_2_outlined),
-                    ),
+          SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: SearchBar(
+              controller: search,
+              padding: MaterialStateProperty.all(
+                  EdgeInsets.symmetric(horizontal: 16.0)),
+              onTap: () {
+                // Optional tap action
+              },
+              onChanged: (_) {
+                // Optional change action
+              },
+              trailing: <Widget>[
+                Tooltip(
+                  message: 'Search',
+                  child: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        apidata();
+                      });
+                    },
+                    icon: Icon(Icons.search),
                   ),
-                  IconButton(
-                    // isSelected: isDark,
-                      onPressed: () async {
-                        result= await Navigator.push(context, MaterialPageRoute(builder: (context) => Searchfilter(),));
-
-                        setState(() {
-                         apidata();
-                        });
-                      },
-                      icon: Icon(Icons.filter_list_alt)
-                  )
-
-                ],
-              )
-              // Container(
-              //   width: MediaQuery.sizeOf(context).width,
-              //   height: 200.0,
-              //   decoration: new BoxDecoration(
-              //     color: Colors.deepPurple,
-              //     borderRadius: BorderRadius.vertical(
-              //         bottom: Radius.elliptical(
-              //             MediaQuery.of(context).size.width, 100.0)),
-              //   ),
-              //   child: Column(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       Text("Crimes of Category "+widget.category ,style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 16))
-              //     ],
-              //   ),
-              // ),
-            ],
+                ),
+                IconButton(
+                    onPressed: () async {
+                      result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Searchfilter(),
+                        ),
+                      );
+                      setState(() {
+                        apidata();
+                      });
+                    },
+                    icon: Icon(Icons.filter_list_alt))
+              ],
+            ),
           ),
-          // SingleChildScrollView(
-          //   child: ListTile(
-          //     title: Text(companies[0].title!),
-          //   )
-          // ),
           Expanded(
-            child: ListView.builder( //CardView for all schools//
-                itemCount: SchoolsList.length + 1,
+            child: ListView.builder(
+                itemCount: schoolsList.length,
                 itemBuilder: (context, index) {
-                  if (index < SchoolsList.length) {
-                    var c = SchoolsList[index];
-                    return Card(
-                      margin: EdgeInsets.all(8),
-                      elevation: 1,
-                      child:Container(
-                        margin: EdgeInsets.all(10),
-                        // padding:EdgeInsets.all(8),
-                        // width:MediaQuery.sizeOf(context).width,
-                        child:InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => SchoolDetails(id: c.id)),
-                            );
-
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-
-                              // Table(
-                              //   border: TableBorder.all(),
-                              //   children: [
-                              //     buildTableRow('Heading One         ', 'Value'),
-                              //     buildTableRow('Heading Two   ', 'Value'),
-                              //     // Add more rows as needed
-                              //   ],
-                              // ),
-                              Wrap(
-                                children: [
-                                  Container(width: 120,child: Text("School Name",style: TextStyle(fontWeight: FontWeight.bold))),
-                                  Text("${c.schoolName}",),
-                                ],
-                              ),
-
-                              Wrap(
-                                children: [
-                                  Container(width: 120,child: Text("Email",style: TextStyle(fontWeight: FontWeight.bold))),
-                                  Text("${c.email}"),
-                                ],
-                              ),
-
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(width: 120,child: Text("School Type",style: TextStyle(fontWeight: FontWeight.bold))),
-                                  Expanded(child: Text(c.board??"",maxLines: null,)),
-                                ],
-                              ),
-
-                              Wrap(
-                                children: [
-                                  Container(width: 120,child: Text("Admission Fee",style: TextStyle(fontWeight: FontWeight.bold))),
-                                  Text("${c.admissionFee}"),
-                                ],
-                              ),
-
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(width:120 ,child: Text("Admission Status ",style: TextStyle(fontWeight: FontWeight.bold))),
-                                  Expanded(child: Text(c.admissionStatus??"" ,maxLines: null,)),
-                                ],
-                              ),
-                              Wrap(
-                                children: [
-                                  Container(width: 120,child: Text("Registration Date",style: TextStyle(fontWeight: FontWeight.bold))),
-                                  Text("${c.createdAt??""}"),
-                                ],
-                              ),
-
-
-
-
-                            ],
-                          ),
-                          // onTap: () {
-                          //   // Navigator.push(context, MaterialPageRoute(builder: (context) => SpecificLocation(id: c.location?.street.id??0),));
-                          //
-                          // },
-                        ) ,
+                  var c = schoolsList[index];
+                  return Card(
+                    margin: EdgeInsets.all(8),
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ListTile(
+                      contentPadding: EdgeInsets.all(10),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  SchoolDetails(id: c.id)),
+                        );
+                      },
+                      title: Text(c.schoolName ?? "",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18)),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 5),
+                          Text("Email: ${c.email}"),
+                          SizedBox(height: 5),
+                          Text("School Type: ${c.board ?? ""}"),
+                          SizedBox(height: 5),
+                          Text("Admission Fee: ${c.admissionFee}"),
+                          SizedBox(height: 5),
+                          Text(
+                              "Admission Status: ${c.admissionStatus ?? ""}"),
+                          SizedBox(height: 5),
+                          Text(
+                              "Registration Date: ${c.createdAt ?? ""}"),
+                        ],
                       ),
-
-                    );
-                  }
+                      trailing: Icon(Icons.arrow_forward_ios),
+                    ),
+                  );
                 }),
           )
         ],
       ),
     );
-
   }
-  
-  apidata() async {
 
+  apidata() async {
     try {
       setState(() {
         isLoading = true;
-        SchoolsList.clear();
-        print("fdkdknsldsk");
+        schoolsList.clear();
       });
 
       Map<String, dynamic> requestBody = {
-        "school_name":search.text.toString()??"",
+        "school_name": search.text.toString() ?? "",
       };
 
       // Check if a search filter has been applied
       if (result != null && result is List<dynamic>) {
         // Construct the request body with search filter parameters
         requestBody = {
-          "school_name":search.text.toString(),
-          "max_tuition_fee": result[0]??"",
-          "area": result[3]??"",
-          "city": result[2]??"",
-          "board": result[1]??""
+          "school_name": search.text.toString(),
+          "max_tuition_fee": result[0] ?? "",
+          "area": result[3] ?? "",
+          "city": result[2] ?? "",
+          "board": result[1] ?? ""
         };
       }
 
@@ -243,7 +172,7 @@ class _schoolSearchListState extends State<schoolSearchList> {
         var data = json.decode(response.body);
         final List<dynamic> items = data['schools'];
         var schoolData = items.map((item) => School.fromJson(item)).toList();
-        SchoolsList.addAll(schoolData);
+        schoolsList.addAll(schoolData);
       }
 
       setState(() {
@@ -253,65 +182,88 @@ class _schoolSearchListState extends State<schoolSearchList> {
       print(e);
     }
   }
-
 }
-class drawer1 extends StatefulWidget {
-  const drawer1({super.key});
+
+class Drawer1 extends StatefulWidget {
+  const Drawer1({super.key});
 
   @override
-  State<drawer1> createState() => _drawerState();
+  State<Drawer1> createState() => _Drawer1State();
 }
 
-class _drawerState extends State<drawer1> {
+class _Drawer1State extends State<Drawer1> {
+  var  name;
+   var email;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getdata();
+  }
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
+
   int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      // Add a ListView to the drawer. This ensures the user can scroll
-      // through the options in the drawer if there isn't enough vertical
-      // space to fit everything.
       child: ListView(
-        // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(
+          UserAccountsDrawerHeader(
             decoration: BoxDecoration(
               color: Colors.lightBlue,
             ),
-            child: Text('Menu',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30)),
+            accountName: Text(name??"", style: TextStyle(fontSize: 18)),
+            accountEmail: Text(email??""),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Text(
+                'U',
+                style: TextStyle(fontSize: 30.0, color: Colors.blue),
+              ),
+            ),
           ),
           ListTile(
-            title: const Text('Home',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22)),
+            leading: Icon(Icons.home),
+            title: Text('Home', style: TextStyle(fontSize: 18)),
             selected: _selectedIndex == 0,
             onTap: () {
-              // Update the state of the app
               _onItemTapped(0);
-              // Then close the drawer
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => schoolSearchList(),), (route) => false);
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SchoolSearchList(),
+                ),
+                    (route) => false,
+              );
             },
           ),
           ListTile(
-            title: const Text('My Profiles',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22)),
+            leading: Icon(Icons.person),
+            title: Text('My Profiles', style: TextStyle(fontSize: 18)),
             selected: _selectedIndex == 1,
             onTap: () {
-              // Update the state of the app
               _onItemTapped(1);
-              // Then close the drawer
-             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ProfileList(),), (route) => false);
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileList(),
+                ),
+                    (route) => false,
+              );
             },
           ),
           ListTile(
-            title: const Text('Logout',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22),),
+            leading: Icon(Icons.logout),
+            title: Text('Logout', style: TextStyle(fontSize: 18)),
             selected: _selectedIndex == 2,
             onTap: () {
-              // Update the state of the app
               _onItemTapped(2);
-              // Then close the drawer
               alert(context);
             },
           ),
@@ -319,4 +271,54 @@ class _drawerState extends State<drawer1> {
       ),
     );
   }
+  getdata() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('Token');
+      print(token);
+      String url;
+      url = 'http://10.0.2.2:8000/api/user';
+      final response = await http.get(Uri.parse(url), headers: {
+        'Authorization': 'Bearer $token',
+      });
+      if (response.statusCode == 200) {
+        final body = response.body;
+        final json = jsonDecode(body);
+        setState(() {
+          name = json['first_name'] + " " + json['last_name'];
+          email = json['email'];
+        });
+      }
+    }catch(e){
+
+    }
+
+  }
+}
+
+void alert(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Logout"),
+        content: Text("Are you sure you want to logout?"),
+        actions: <Widget>[
+          TextButton(
+            child: Text("Cancel"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text("Logout"),
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => login(),), (route) => false);
+              // Perform logout operation
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

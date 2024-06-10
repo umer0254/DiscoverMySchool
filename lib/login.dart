@@ -192,9 +192,10 @@ loginUser(String email,String password ) async {
       final json = jsonDecode(body);
       final userType=json['data']['user_type'];
       final bearertoken=json['data']['token'];
+      print(bearertoken);
       prefs.setString('Token', bearertoken);
       if(userType=="Parent"){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => schoolSearchList(),));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SchoolSearchList(),));
       } else if(userType=="School"){
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SchoolScreen(),));
       }else if(userType=="Admin"){

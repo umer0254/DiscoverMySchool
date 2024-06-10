@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:discovermyschool/SchoolService.dart';
 import 'package:discovermyschool/allSchools.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,6 +56,7 @@ class _AdminPanelState extends State<AdminPanel> {
 
   bool isLoading = false;
   List<School> SchoolsList = [];
+  SchoolService school=SchoolService();
 
   @override
   void initState() {
@@ -68,6 +70,7 @@ class _AdminPanelState extends State<AdminPanel> {
     return Scaffold(
       appBar: AppBar(
           title: Text("Unapproved Schools",style: TextStyle(fontWeight: FontWeight.bold)), backgroundColor: Colors.lightBlue),
+
       body: (isLoading && SchoolsList.isEmpty)
           ? Center(
               child: CircularProgressIndicator(
@@ -214,7 +217,9 @@ class _AdminPanelState extends State<AdminPanel> {
                                             icon: Icon(Icons.check,color: Colors.green,semanticLabel: "Approve"),
                                             iconSize: 30),
                                         IconButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                          deleteschool(c.id);
+                                            },
                                             icon: Icon(Icons.close,color: Colors.red),
                                             iconSize: 30),
                                       ],
@@ -317,6 +322,25 @@ class _AdminPanelState extends State<AdminPanel> {
       print(e);
     }
   }
+   deleteschool(int id) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.get('Token');
+    String url = 'http://10.0.2.2:8000/api/unapproveSchool/$id';
+    try {
+      final response = await http.put(Uri.parse(url), headers: {
+        'Authorization': 'Bearer $token',
+      });
+      if (response.statusCode == 200) {
+        // Handle successful rejection
+        SchoolsList.clear();
+        apidata();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Deletion Successfull")));
+
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
   approval(int id) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final token=prefs.get('Token');
@@ -328,7 +352,9 @@ class _AdminPanelState extends State<AdminPanel> {
         'Authorization': 'Bearer $token',
       });
       if (response.statusCode == 200) {
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => AdminPanel(),), (route) => false);
+        SchoolsList.clear();
+        apidata();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Approved successfully")));
 
       }
     }catch(e){
@@ -348,12 +374,27 @@ class drawer extends StatefulWidget {
 }
 
 class _drawerState extends State<drawer> {
+  var name="";
+  var email="";
+  int _selectedIndex = 0;
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getdata();
+  }
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -364,14 +405,27 @@ class _drawerState extends State<drawer> {
         // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(
+          UserAccountsDrawerHeader(
             decoration: BoxDecoration(
               color: Colors.lightBlue,
             ),
-            child: Text('Menu',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30)),
+            accountName: Text(name, style: TextStyle(fontSize: 18)),
+            accountEmail: Text(email),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Text(
+                name[0],
+                style: TextStyle(fontSize: 30.0, color: Colors.blue),
+              ),
+            ),
           ),
           ListTile(
-            title: const Text('Home',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22)),
+            title: Row(
+              children: [
+                Icon(Icons.home),
+                const Text('Unapproved Schools',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22)),
+              ],
+            ),
             selected: _selectedIndex == 0,
             onTap: () {
               // Update the state of the app
@@ -381,7 +435,12 @@ class _drawerState extends State<drawer> {
             },
           ),
           ListTile(
-            title: const Text('All Schools',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22)),
+            title: Row(
+              children: [
+                Icon(Icons.approval_sharp),
+                const Text('Approved Schools',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22)),
+              ],
+            ),
             selected: _selectedIndex == 1,
             onTap: () {
               // Update the state of the app
@@ -395,7 +454,12 @@ class _drawerState extends State<drawer> {
             },
           ),
           ListTile(
-            title: const Text('Logout',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22),),
+            title: Row(
+              children: [
+                Icon(Icons.logout),
+                const Text('Logout',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22),),
+              ],
+            ),
             selected: _selectedIndex == 2,
             onTap: () {
               // Update the state of the app
@@ -407,6 +471,29 @@ class _drawerState extends State<drawer> {
         ],
       ),
     );
+  }
+  getdata() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('Token');
+      print(token);
+      String url;
+      url = 'http://10.0.2.2:8000/api/user';
+      final response = await http.get(Uri.parse(url), headers: {
+        'Authorization': 'Bearer $token',
+      });
+      if (response.statusCode == 200) {
+        final body = response.body;
+        final json = jsonDecode(body);
+        setState(() {
+          name = json['first_name'] + " " + json['last_name'];
+          email = json['email'];
+        });
+      }
+    }catch(e){
+
+    }
+
   }
 }
 
