@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:discovermyschool/ProfileList.dart';
 import 'package:discovermyschool/adminPanel.dart';
 import 'package:discovermyschool/login.dart';
@@ -28,6 +29,12 @@ class _SchoolSearchListState extends State<SchoolSearchList> {
   void initState() {
     super.initState();
     apidata();
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        // This is a good place to show a dialog asking the user to allow notifications
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
   }
 
   @override
@@ -121,6 +128,8 @@ class _SchoolSearchListState extends State<SchoolSearchList> {
                           Text("School Type: ${c.board ?? ""}"),
                           SizedBox(height: 5),
                           Text("Admission Fee: ${c.admissionFee}"),
+                          SizedBox(height: 5),
+                          Text("Tuition Fee: ${c.tuitionFee}"),
                           SizedBox(height: 5),
                           Text(
                               "Admission Status: ${c.admissionStatus ?? ""}"),
@@ -295,30 +304,30 @@ class _Drawer1State extends State<Drawer1> {
 
   }
 }
-
-void alert(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text("Logout"),
-        content: Text("Are you sure you want to logout?"),
-        actions: <Widget>[
-          TextButton(
-            child: Text("Cancel"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: Text("Logout"),
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => login(),), (route) => false);
-              // Perform logout operation
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
+//
+// void alert(BuildContext context) {
+//   showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return AlertDialog(
+//         title: Text("Logout"),
+//         content: Text("Are you sure you want to logout?"),
+//         actions: <Widget>[
+//           TextButton(
+//             child: Text("Cancel"),
+//             onPressed: () {
+//               Navigator.of(context).pop();
+//             },
+//           ),
+//           TextButton(
+//             child: Text("Logout"),
+//             onPressed: () {
+//               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => login(),), (route) => false);
+//               // Perform logout operation
+//             },
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }

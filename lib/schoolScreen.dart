@@ -131,7 +131,7 @@ class _Drawer2State extends State<Drawer2> {
             selected: _selectedIndex == 0,
             onTap: () {
               _onItemTapped(0);
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SchoolScreen(),));
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SchoolScreen(),), (route) => false);
             },
           ),      ListTile(
             title: Row(
@@ -144,7 +144,7 @@ class _Drawer2State extends State<Drawer2> {
             selected: _selectedIndex == 1,
             onTap: () {
               _onItemTapped(0);
-              Navigator.push(context, MaterialPageRoute(builder: (context) => approvedapplications(),));
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => approvedapplications(),), (route) => false);
             },
           ),
           ListTile(
@@ -158,12 +158,7 @@ class _Drawer2State extends State<Drawer2> {
             selected: _selectedIndex == 2,
             onTap: () {
               _onItemTapped(1);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditSchoolProfileScreen(schoolProfile:{}),
-                ),
-              );
+            Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => EditSchoolProfileScreen(schoolProfile:{}),), (route) => false);
             },
           ),
           ListTile(

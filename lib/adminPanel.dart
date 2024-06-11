@@ -376,6 +376,7 @@ class drawer extends StatefulWidget {
 class _drawerState extends State<drawer> {
   var name="";
   var email="";
+  var initial="";
   int _selectedIndex = 0;
   @override
   void dispose() {
@@ -414,7 +415,7 @@ class _drawerState extends State<drawer> {
             currentAccountPicture: CircleAvatar(
               backgroundColor: Colors.white,
               child: Text(
-                name[0],
+               initial,
                 style: TextStyle(fontSize: 30.0, color: Colors.blue),
               ),
             ),
@@ -488,6 +489,8 @@ class _drawerState extends State<drawer> {
         setState(() {
           name = json['first_name'] + " " + json['last_name'];
           email = json['email'];
+          initial=json['first_name'];
+          initial=initial[0];
         });
       }
     }catch(e){

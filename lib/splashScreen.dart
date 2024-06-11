@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:discovermyschool/login.dart';
 import 'package:discovermyschool/ProfileList.dart';
 import 'package:discovermyschool/schoolScreen.dart';
@@ -23,6 +24,7 @@ class _splashScreenState extends State<splashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     Timer(Duration(seconds: 3),()
     {
       tokenValidity();
